@@ -8,6 +8,7 @@ import re
 firebaseConfig = {
     "apiKey": "AIzaSyA9OAKxoimBMvEyxJkO3_6PDnwSZjVJC7E",
     "authDomain": "harvestmate-khawmebaby.firebaseapp.com",
+    'databaseURL': "https://harvestmate-khawmebaby-default-rtdb.asia-southeast1.firebasedatabase.app",
     "projectId": "harvestmate-khawmebaby",
     "storageBucket": "harvestmate-khawmebaby.appspot.com",
     "messagingSenderId": "1058350016758",
@@ -24,7 +25,7 @@ storage = firebase.storage()
 cred = credentials.Certificate("harvestmate-khawmebaby-firebase-adminsdk-ccudj-fab768094e.json")
 firebase_admin.initialize_app(cred, { 'databaseURL': "https://harvestmate-khawmebaby-default-rtdb.asia-southeast1.firebasedatabase.app"})
 
-# """"""""""""
+""""""""""""
 # #Extract data from real time database
 # ref = db.reference('/')
 # data_arr = []
