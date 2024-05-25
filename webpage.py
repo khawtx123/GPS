@@ -6,6 +6,7 @@ from mapPlotter.plot_map import mapPlotter
 from collections import OrderedDict
 import glob
 import os
+from jinja2 import Environment, FileSystemLoader
 
 app = Flask(__name__)
 CORS(app)
@@ -70,11 +71,15 @@ def upload_images():
 
     for folder in folders:
         subfolder = os.path.join(directory, folder)
-        jpeg_files = glob.glob(subfolder + "/*.jpg")
-        print("JPEG files found:")
-        for file in jpeg_files:
-            uploaded_file_path = file.replace("\\", "/")
-            firebase_helper.upload_image(file, uploaded_file_path)
+        entries = os.listdir(subfolder)
+        JPEG_folders = [entry for entry in entries if os.path.isdir(subfolder)]
+
+        for dir in JPEG_folders:
+            target = os.path.join(subfolder, dir)
+            jpeg_files = glob.glob(target + "/*.jpg")
+            for file in jpeg_files:
+                uploaded_file_path = file.replace("\\", "/")
+                firebase_helper.upload_image(file, uploaded_file_path)
 
 def dict_to_html_table():
     html = "<p> Harvesting Report</p>\n"
@@ -107,6 +112,22 @@ def dict_to_html_table():
     return html
 
 
+def detection_page_content(keys1, data):
+    env = Environment(loader=FileSystemLoader('.'))
+    template = env.get_template('templates/detection_page_template.html')
+    html_content = template.render(keys1=keys1, data=data)
+    return html_content
+
+
+# Save HTML content to a file
+def save_detection_page_html(html_content):
+    with open('templates/detection_page.html', 'w') as html_file:
+        html_file.write(html_content)
+
+def fetch_image_url(path):
+        firebase_helper.fetch_image(path)
+
+
 if __name__ == '__main__':
     location = mapPlotter("mapPlotter/coordinates.csv")
     coordinates = location.read_csv()
@@ -115,5 +136,9 @@ if __name__ == '__main__':
     upload_data(coordinates)
     coordinates = firebase_helper.fetch_data()
 
-    upload_images()
+    top_level_keys = list(coordinates.keys())
+    html_content = detection_page_content(top_level_keys, coordinates)
+    save_detection_page_html(html_content)
+
+    # upload_images()
     app.run(debug=True)

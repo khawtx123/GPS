@@ -73,4 +73,9 @@ class FirebaseHelper:
 
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
 coordinates = firebase_helper.fetch_data()
-firebase_helper.upload_image(r"C:\Users\USER\source\repos\GPS\detected_pics\2252024\frame_1.jpg", "detected_pics/2252024/frame_1.jpg")
+# option = coordinates['2052024']
+# for key in option:
+#     print(key)
+# top_level_keys = list(coordinates.keys())
+# print(top_level_keys)
+# firebase_helper.upload_image(r"C:\Users\USER\source\repos\GPS\detected_pics\2252024\frame_1.jpg", "detected_pics/2252024/frame_1.jpg")

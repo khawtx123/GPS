@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Selection</title>
+</head>
+    <body>
+    <h2>Select from Dropdowns</h2>
+    <form id= "selectionForm" action="#">
+        <label for="date">Choose Date:</label>
+        <select id="date" name="date" onchange="updateLocation()">
+            {% for key in keys1 %}
+            <option value="{{ key }}">{{ key }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="location">Select second option:</label>
+        <select id="location" name="location">
+            <option value="">--Select--</option>
+        </select>
+        <br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="imageContainer"></div>
+
+    <script>
+        const data = {{ data|tojson|safe }};
+
+        function updateLocation() {
+            const date = document.getElementById('date');
+            const location = document.getElementById('location');
+            const selectedValue = date.value;
+
+            // Clear the second dropdown
+            location.innerHTML = '<option value="">--Select--</option>';
+
+            if (selectedValue && data[selectedValue]) {
+                // Populate the second dropdown based on the first dropdown's selection
+                const options = data[selectedValue];
+                for (const key in options) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.text = key;
+                    location.appendChild(option);
+                }
+            }
+        }
+
+        document.getElementById('selectionForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const firstSelection = document.getElementById('date').value;
+            const secondSelection = document.getElementById('location').value;
+
+            if (firstSelection && secondSelection) {
+                const imagePath = `{detected_pics}/${firstSelection}/${secondSelection}`;
+                const response = await fetch('/fetch_image_url', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ path: imagePath }),
+                });
+                const result = await response.json();
+                const imageUrl = result.url;
+                displayImage(imageUrl);
+            }
+        });
+
+        function displayImage(url) {
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = `<img src="${url}" alt="Selected Image">`;
+        }
+
+        function showMessage(selectedValue) {
+            alert("You selected: " + selectedValue);
+        }
+    </script>
+    </body>
+</html>
+    
