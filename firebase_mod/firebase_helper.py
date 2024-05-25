@@ -1,6 +1,6 @@
 import firebase_admin
 import pyrebase
-from firebase_admin import credentials, storage
+from firebase_admin import credentials, storage, db
 from firebase_mod.firebase_config import firebaseConfig, service_account_path
 import os
 from datetime import timezone, datetime
@@ -46,8 +46,6 @@ class FirebaseHelper:
     def fetch_data(self):
         """Fetches data from the Realtime Database."""
         data = self.realtime_db.child("").get().val()
-        print("Data fetched:")
-        print(data)
         return data
 
     def fetch_image(self, data_location):
@@ -72,4 +70,7 @@ class FirebaseHelper:
             print(f"Image downloaded: {image_path}")
         return images
 
+
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
+coordinates = firebase_helper.fetch_data()
+firebase_helper.upload_image(r"C:\Users\USER\source\repos\GPS\detected_pics\2252024\frame_1.jpg", "detected_pics/2252024/frame_1.jpg")

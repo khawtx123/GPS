@@ -1,12 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
-from jinja2 import Environment, FileSystemLoader
 from firebase_mod.firebase_helper import FirebaseHelper
 from firebase_mod.firebase_config import firebaseConfig, service_account_path
 from mapPlotter.plot_map import mapPlotter
-import folium
-import csv
-import subprocess
+from collections import OrderedDict
+import glob
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -28,14 +27,7 @@ def detection_page():
 
 @app.route('/harvesting_report')
 def harvesting_report():
-    data = {
-        "Name": "John",
-        "Age": 30,
-        "City": "New York"
-    }
-
-    # Generate HTML table from dictionary
-    html_table = dict_to_html_table(data)
+    html_table = dict_to_html_table()
     with open('templates/harvesting_report.html', 'w') as file:
         file.write(html_table)
     # Render HTML template with the generated table
@@ -69,24 +61,48 @@ def upload_data(coordinates):
         firebase_helper.upload_data(example_data, example_location)
 
 
-def dict_to_html_table(data):
-    # Start building the HTML table
-    html = "<table border='1'>\n"
-    keys = ["date", "time", "location", "latitude", "longitude", "palm oils detected", "palm oils harvested"]
-    # Add table header
-    html += "<tr>"
-    for key in keys:
-        html += f"<th>{key}</th>"
-    html += "</tr>\n"
+def upload_images():
+    directory = "detected_pics"
+    entries = os.listdir(directory)
 
-    # Add table data
-    html += "<tr>"
-    for value in data.values():
-        html += f"<td>{value}</td>"
-    html += "</tr>\n"
+    # Filter the entries to include only directories
+    folders = [entry for entry in entries if os.path.isdir(os.path.join(directory, entry))]
 
-    # Close the table
-    html += "</table>"
+    for folder in folders:
+        subfolder = os.path.join(directory, folder)
+        jpeg_files = glob.glob(subfolder + "/*.jpg")
+        print("JPEG files found:")
+        for file in jpeg_files:
+            uploaded_file_path = file.replace("\\", "/")
+            firebase_helper.upload_image(file, uploaded_file_path)
+
+def dict_to_html_table():
+    html = "<p> Harvesting Report</p>\n"
+    for key, value in coordinates.items():
+        # Start building the HTML table
+        html+= "<div>"
+        html += f"<p> {key}</p>\n"
+        html += "<table border='1'>\n"
+        keys = ["location", "latitude", "longitude", "palm oils detected", "palm oils harvested", "time"]
+        # Add table header
+        html += "<tr>"
+        for key in keys:
+            html += f"<th>{key}</th>"
+        html += "</tr>"
+        # html += f"<td>{key}</td>"
+
+        html += "<tr>"
+        for location, data in value.items():
+            html += "<tr>"
+            html += f"<td>{location}</td>"
+            for detail, data in data.items():
+                html += f"<td>{data}</td>"
+            html += "</tr>\n"
+        html += "</tr>\n"
+
+        # Close the table
+        html += "</table>\n"
+        html += "</div>"
 
     return html
 
@@ -97,6 +113,7 @@ if __name__ == '__main__':
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
 
     upload_data(coordinates)
-    firebase_helper.fetch_data()
+    coordinates = firebase_helper.fetch_data()
 
+    upload_images()
     app.run(debug=True)

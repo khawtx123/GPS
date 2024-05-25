@@ -8,7 +8,7 @@ from PyQt5.uic import loadUi
 # Define some constants
 WINDOW_WIDTH = 1080
 WINDOW_HEIGHT = 463
-PLANTATION_MAP = "C:\\Users\\cyx02\\Downloads\\Documents\\IDP\\plantationmap.jpg"  # Replace with your actual map image
+PLANTATION_MAP = "detected_pics/2052024/frame_0.jpg"  # Replace with your actual map image
 NUM_TREES = 100
 TREES_PER_COLUMN = 20
 HARVEST_TIME = 5000  # 5 seconds
