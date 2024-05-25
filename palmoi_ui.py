@@ -126,12 +126,21 @@ class HarvestmateDetailsPage(tk.Frame):
         self.status_value = tk.Label(details_frame, text="Harvesting", font=("Times New Roman", 16))
         self.status_value.grid(row=1, column=1, sticky="w")
 
+        # Add the webpage link
+        webpage_link_label = tk.Label(details_frame, text="To view more please click on : http://127.0.0.1:5000", font=("Times New Roman", 14), fg="blue", cursor="hand2")
+        webpage_link_label.grid(row=2, column=0, columnspan=2, pady=10)
+        webpage_link_label.bind("<Button-1>", lambda e: self.open_webpage("http://127.0.0.1:5000"))
+
         # Add a button to simulate location updates
         update_location_button = tk.Button(details_frame, text="Update Location", command=self.update_location, font=("Times New Roman", 14), bg="#4CAF50", fg="white", padx=10, pady=5)
-        update_location_button.grid(row=2, column=0, columnspan=2, pady=10)
+        update_location_button.grid(row=3, column=0, columnspan=2, pady=10)
 
         back_button = tk.Button(self, text="Back", command=lambda: controller.show_frame(HarvestingPage, controller, machine_index), font=("Times New Roman", 16), bg="#f44336", fg="white", padx=20, pady=20)
         back_button.pack(pady=20)
+
+    def open_webpage(self, url):
+        import webbrowser
+        webbrowser.open_new(url)
 
     def update_location(self):
         # Simulate location update by cycling through the list of locations
