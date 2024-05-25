@@ -43,6 +43,13 @@ class FirebaseHelper:
         print(data)
         return data
 
+    def fetch_data(self):
+        """Fetches data from the Realtime Database."""
+        data = self.realtime_db.child("").get().val()
+        print("Data fetched:")
+        print(data)
+        return data
+
     def fetch_image(self, data_location):
         """Fetches an image URL from Firebase Storage."""
         bucket = storage.bucket(app=self.app)
@@ -50,6 +57,7 @@ class FirebaseHelper:
         image_url = blob.generate_signed_url(expiration= self.current_time+ 3600, method='GET')
         print(f"Generated signed URL: {image_url}")
         return image_url
+
 
     def download_images(self, image_location):
         """Downloads images from Firebase Storage."""
@@ -64,7 +72,4 @@ class FirebaseHelper:
             print(f"Image downloaded: {image_path}")
         return images
 
-
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
-image_url = firebase_helper.fetch_image("images/day_1/location_1/palm_oil_1.jpg")
-print(image_url)

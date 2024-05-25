@@ -26,37 +26,77 @@ def detection_page():
     print(image_url)
     return render_template('detection_page.html', image_url=image_url)
 
+@app.route('/harvesting_report')
+def harvesting_report():
+    data = {
+        "Name": "John",
+        "Age": 30,
+        "City": "New York"
+    }
+
+    # Generate HTML table from dictionary
+    html_table = dict_to_html_table(data)
+    with open('templates/harvesting_report.html', 'w') as file:
+        file.write(html_table)
+    # Render HTML template with the generated table
+    return render_template('harvesting_report.html', table=html_table)
+
+
 @app.route('/next')
 def next():
     return render_template('next.html')
 
 
+def upload_data(coordinates):
+    for coordinate in coordinates:
+        day = coordinate['date'].replace("/", "")
+        example_data = {
+            "timestamp" : coordinate['time'],
+            "latitude": coordinate['lat'],
+            "longitude": coordinate['lon'],
+            "palm oils detected": coordinate['detected'],
+            "palm oils harvested": coordinate['harvested']
+        }
+        location = coordinate['name']
+        word_to_split_by = "location"
+        split_strings = location.split(word_to_split_by)
+        if int(split_strings[1])<10:
+            split_strings[1] = "0" + split_strings[1]
+        coordinate['name'] = "location" + split_strings[1]
+
+        example_location = day + "/" + coordinate['name']
+        # Call upload_data function
+        firebase_helper.upload_data(example_data, example_location)
+
+
+def dict_to_html_table(data):
+    # Start building the HTML table
+    html = "<table border='1'>\n"
+    keys = ["date", "time", "location", "latitude", "longitude", "palm oils detected", "palm oils harvested"]
+    # Add table header
+    html += "<tr>"
+    for key in keys:
+        html += f"<th>{key}</th>"
+    html += "</tr>\n"
+
+    # Add table data
+    html += "<tr>"
+    for value in data.values():
+        html += f"<td>{value}</td>"
+    html += "</tr>\n"
+
+    # Close the table
+    html += "</table>"
+
+    return html
+
 
 if __name__ == '__main__':
     location = mapPlotter("mapPlotter/coordinates.csv")
-    location.read_csv()
-    # Create an instance of FirebaseHelper
+    coordinates = location.read_csv()
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
 
-    # Example usage
-    firebase_helper.upload_image(r'C:\Users\USER\source\repos\GPS\detected_pics\segmentation_test.jpg',
-                                 'images/day_1/location_1/palm_oil_1.jpg')
-
-    # Example data to upload
-    example_data = {
-        "longitude": 100.23,
-        "latitude": 30.456,
-        "palm oils detected": 3
-    }
-
-    # Example location to upload data
-    example_location = "day_1/location_1"
-
-    # Call upload_data function
-    firebase_helper.upload_data(example_data, example_location)
-
-    # Fetch data
-    data = firebase_helper.fetch_data(example_location)
-    print(data['latitude'])
+    upload_data(coordinates)
+    firebase_helper.fetch_data()
 
     app.run(debug=True)
