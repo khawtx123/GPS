@@ -56,7 +56,7 @@
             const secondSelection = document.getElementById('location').value;
 
             if (firstSelection && secondSelection) {
-                const imagePath = `{detected_pics}/${firstSelection}/${secondSelection}`;
+                const imagePath = `detected_pics/${firstSelection}/${secondSelection}`;
                 const response = await fetch('/fetch_image_url', {
                     method: 'POST',
                     headers: {
@@ -65,16 +65,21 @@
                     body: JSON.stringify({ path: imagePath }),
                 });
                 const result = await response.json();
-                const imageUrl = result.url;
-                displayImage(imageUrl);
+                const imageUrl = result.image_url;
+                displayImages(imageUrl);
             }
         });
 
-        function displayImage(url) {
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = `<img src="${url}" alt="Selected Image">`;
-        }
-
+        function displayImages(urls) {
+        const imageContainer = document.getElementById('imageContainer');
+        imageContainer.innerHTML = ''; // Clear previous images
+        urls.forEach(url => {
+            const imgElement = document.createElement('img');
+            imgElement.src = url;
+            imgElement.alt = 'Selected Image';
+            imageContainer.appendChild(imgElement);
+        });
+}
         function showMessage(selectedValue) {
             alert("You selected: " + selectedValue);
         }

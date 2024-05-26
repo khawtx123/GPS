@@ -22,9 +22,7 @@ def map_with_coordinates():
 
 @app.route('/detection_page')
 def detection_page():
-    image_url = firebase_helper.fetch_image("images/day_1/location_1/palm_oil_1.jpg")
-    print(image_url)
-    return render_template('detection_page.html', image_url=image_url)
+    return render_template('detection_page.html')
 
 @app.route('/harvesting_report')
 def harvesting_report():
@@ -34,6 +32,12 @@ def harvesting_report():
     # Render HTML template with the generated table
     return render_template('harvesting_report.html', table=html_table)
 
+@app.route('/robot_location')
+def robot_location_page():
+    data = firebase_helper.get_last_entry()
+    image_dir = firebase_helper.list_jpg_files("robot_location")
+    for img in image_dir: image_url = firebase_helper.fetch_image(img)
+    return render_template('robot_location.html', data = data, image_url=image_url)
 
 @app.route('/next')
 def next():
@@ -81,6 +85,15 @@ def upload_images():
                 uploaded_file_path = file.replace("\\", "/")
                 firebase_helper.upload_image(file, uploaded_file_path)
 
+
+def upload_robot_images():
+    directory = "robot_location"
+    jpeg_files = glob.glob(directory + "/*.jpg")
+    for file in jpeg_files:
+        uploaded_file_path = file.replace("\\", "/")
+        firebase_helper.upload_image(file, uploaded_file_path)
+
+
 def dict_to_html_table():
     html = "<p> Harvesting Report</p>\n"
     for key, value in coordinates.items():
@@ -124,15 +137,29 @@ def save_detection_page_html(html_content):
     with open('templates/detection_page.html', 'w') as html_file:
         html_file.write(html_content)
 
-def fetch_image_url(path):
-        firebase_helper.fetch_image(path)
+def fetch_image_urls(path):
+    urls = []
+    jpg_files = firebase_helper.list_jpg_files(path)
+    for file in jpg_files:
+        urls.append(firebase_helper.fetch_image(file))
+    return urls
 
+
+@app.route('/fetch_image_url', methods=['POST'])
+def get_image_url():
+    data = request.json
+    image_path = data['path']
+    if image_path:
+        image_urls = fetch_image_urls(image_path)
+        print(image_urls)
+        return jsonify({'image_url': image_urls})
+    return jsonify({'error': 'Image path not provided'}), 400
 
 if __name__ == '__main__':
     location = mapPlotter("mapPlotter/coordinates.csv")
     coordinates = location.read_csv()
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
-
+    print("Welcome to HarvestMate")
     upload_data(coordinates)
     coordinates = firebase_helper.fetch_data()
 
@@ -141,4 +168,5 @@ if __name__ == '__main__':
     save_detection_page_html(html_content)
 
     # upload_images()
+    upload_robot_images()
     app.run(debug=True)

@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image from Firebase</title>
+    <title>Horizontal Layout with Inline-Block</title>
+    <style>
+        .inline-container {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .inline-item {
+            display: inline-block;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid blue;
+        }
+    </style>
 </head>
 <body>
-    <h1>Image from Firebase</h1>
-    <img src="{{ image_url }}" alt="Image from Firebase">
-    <button onclick="location.href='/'">Go Back to Home Page</button>
+    <div class="inline-container">
+        <div class="inline-item">Item 1</div>
+        <div class="inline-item">Item 2</div>
+        <div class="inline-item">Item 3</div>
+    </div>
 </body>
 </html>

@@ -56,6 +56,12 @@ class FirebaseHelper:
         print(f"Generated signed URL: {image_url}")
         return image_url
 
+    def list_jpg_files(self, directory):
+        bucket = storage.bucket(app=self.app)
+        blobs = bucket.list_blobs(prefix=directory)
+        jpg_files = [blob.name for blob in blobs if blob.name.endswith('.jpg')]
+        print(jpg_files)
+        return jpg_files
 
     def download_images(self, image_location):
         """Downloads images from Firebase Storage."""
@@ -70,12 +76,19 @@ class FirebaseHelper:
             print(f"Image downloaded: {image_path}")
         return images
 
+    def get_last_entry(self):
+        root_ref = db.reference("/")
+        # Get the top-level keys
+        top_level_keys = root_ref.get().keys()
+        last_key = list(top_level_keys)[-1] if top_level_keys else None  # Select the last key
+        location_ref = root_ref.child(last_key)
+        location_keys = location_ref.get().keys()
+        location_data = location_ref.child(list(location_keys)[-1]).get()
+        print(location_data)
+        return location_data
 
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
 coordinates = firebase_helper.fetch_data()
-# option = coordinates['2052024']
-# for key in option:
-#     print(key)
-# top_level_keys = list(coordinates.keys())
-# print(top_level_keys)
-# firebase_helper.upload_image(r"C:\Users\USER\source\repos\GPS\detected_pics\2252024\frame_1.jpg", "detected_pics/2252024/frame_1.jpg")
+location_data = firebase_helper.get_last_entry()
+for x,y in location_data.items():
+    print(y)

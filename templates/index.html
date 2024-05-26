@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Webpage</title>
+    <style>
+         .flex-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between items */
+            border: 1px solid black;
+            padding: 20px;
+        }
+        .flex-item {
+            padding: 10px; /* Optional: padding inside each item */
+            border: 1px solid blue;
+        }
+    </style>
 </head>
 <body>
-    <h1>HarvestMate!</h1>
+<div class="flex-container">
+        <div class="HarvestMate!">
+            <h1>HarvestMate!</h1>
+        </div>
+    </div>
+
     <p>Choose one of the below</p>
+
+<div class="flex-container">
     <button onclick="location.href='/map_with_coordinates'">Robot Location</button>
     <button onclick="location.href='/harvesting_report'">Harvesting Report</button>
     <button onclick="location.href='/detection_page'">Palm Oil Detection</button>
+    <button onclick="location.href='/robot_location'">Robot POV</button>
+    </div>
 </body>
 </html>
