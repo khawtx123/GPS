@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dropdown Selection</title>
+    <style>
+        .container {
+            display: flex; /* Use flexbox */
+            gap : 20px;
+        }
+
+        .box {
+            margin: 10px;
+            padding: 10px
+            text-align: center;
+        }
+
+        .box img {
+            width: 10px; /* Adjust image width */
+            height: auto;
+        }
+        img {
+                max-width: 50%;
+                height: auto;
+            }
+    </style>
 </head>
     <body>
     <h2>Select from Dropdowns</h2>
@@ -24,8 +45,8 @@
 
         <input type="submit" value="Submit">
     </form>
-
-    <div id="imageContainer"></div>
+    <br><br>
+    <div id="imageContainer" class="container"></div>
 
     <script>
         const data = {{ data|tojson|safe }};

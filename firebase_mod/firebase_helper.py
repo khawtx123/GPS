@@ -88,7 +88,3 @@ class FirebaseHelper:
         return location_data
 
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
-coordinates = firebase_helper.fetch_data()
-location_data = firebase_helper.get_last_entry()
-for x,y in location_data.items():
-    print(y)

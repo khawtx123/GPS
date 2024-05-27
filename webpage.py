@@ -7,6 +7,8 @@ from collections import OrderedDict
 import glob
 import os
 from jinja2 import Environment, FileSystemLoader
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 app = Flask(__name__)
 CORS(app)
@@ -14,7 +16,9 @@ CORS(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    image_urls = fetch_image_urls("css")
+    print(image_urls)
+    return render_template('index.html', harvestmate=image_urls[0], img1 = image_urls[1], img2 = image_urls[2], img3 = image_urls[3])
 
 @app.route('/map_with_coordinates')
 def map_with_coordinates():
@@ -94,11 +98,98 @@ def upload_robot_images():
         firebase_helper.upload_image(file, uploaded_file_path)
 
 
+def generate_3d_plot(x, y, z, filename, color='b', marker ='o', title = 'Palm Oils Detected'):
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.scatter(x, y, z, c=color, marker=marker)
+
+    ax.set_xlabel('Latitude')
+    ax.set_ylabel('Longitude')
+    ax.set_zlabel('Palm Oils')
+    ax.set_title(title)
+    for i in range(len(x)):
+        latitude = str(x[i]).split(".")
+        longitude = str(y[i]).split(".")
+        ax.text(x[i], y[i], z[i], f'(.{latitude[1][:3]}, .{longitude[1][:3]}, {z[i]})', fontsize=8, color='black')
+    # Save the figure as an image
+    directory = os.path.join(filename.split("/")[0], filename.split("/")[1].split(".")[0])
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    plt.savefig(filename)
+
+def generate_2d_plot(x,y, filename, color='b', marker ='o', linestyle ='-', title = 'Palm Oils Detected'):
+    plt.figure(figsize=(8, 6))
+    plt.plot(x, marker=marker, linestyle=linestyle, color=color)  # Plot with blue color, circles as markers, and solid lines
+    plt.plot(y, marker='x', linestyle=linestyle,color='r')  # Plot with blue color, circles as markers, and solid lines
+    plt.title('Detected vs Harvested')
+    plt.grid(True)  # Add grid lines
+    plt.savefig(filename)  # Save the plot to a file
+    plt.close()  # Close the plot to free memory
+
 def dict_to_html_table():
-    html = "<p> Harvesting Report</p>\n"
+    html = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Harvesting Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .inline-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                margin:20px
+            }
+            
+            .inline-items{
+                padding : 10px
+            }
+            
+            .inline-container img {
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto; /* Maintain aspect ratio */
+            margin: auto; /* Center align images horizontally */
+
+        }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 600px;
+            }
+            th, td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            p {
+                font-weight: bold;
+            }
+            img {
+                max-width: 70%;
+                height: auto;
+            }   
+            h1 {text-align: center};
+        </style>>
+        
+    </head>
+    <body>
+    <h1>Harvesting Report</h1>
+    """
+
     for key, value in coordinates.items():
         # Start building the HTML table
-        html+= "<div>"
+        date = key
+        html += "<div class=""inline-container"">\n"
+        key = key[:2] + "/" + key[2] + "/" + key[3:len(key)]
         html += f"<p> {key}</p>\n"
         html += "<table border='1'>\n"
         keys = ["location", "latitude", "longitude", "palm oils detected", "palm oils harvested", "time"]
@@ -107,21 +198,55 @@ def dict_to_html_table():
         for key in keys:
             html += f"<th>{key}</th>"
         html += "</tr>"
-        # html += f"<td>{key}</td>"
 
         html += "<tr>"
+        latitude = []
+        longitude = []
+        palm_oils_detected = []
+        palm_oils_harvested = []
         for location, data in value.items():
             html += "<tr>"
             html += f"<td>{location}</td>"
+            latitude.append(data['latitude'])
+            longitude.append(data['longitude'])
+            palm_oils_detected.append(data['palm oils detected'])
+            palm_oils_harvested.append(data['palm oils harvested'])
             for detail, data in data.items():
                 html += f"<td>{data}</td>"
             html += "</tr>\n"
-        html += "</tr>\n"
 
+        detected_harvested_graph = "graphs/" + date + "/" + "detected_vs_harvested.jpg"
+        palm_oils_detected_graph = "graphs/" + date + "/" + "palm oils detected.jpg"
+        palm_oils_harvested_graph = "graphs/" + date + "/" + "palm oils harvested.jpg"
+
+        generate_2d_plot(palm_oils_detected, palm_oils_harvested, detected_harvested_graph)
+        generate_3d_plot(latitude, longitude, palm_oils_detected, palm_oils_detected_graph)
+        generate_3d_plot(latitude, longitude, palm_oils_harvested, palm_oils_harvested_graph, color='r', title = 'Palm Oil Harvested')
+
+        firebase_helper.upload_image(detected_harvested_graph, detected_harvested_graph)
+        firebase_helper.upload_image(palm_oils_detected_graph, palm_oils_detected_graph)
+        firebase_helper.upload_image(palm_oils_harvested_graph, palm_oils_harvested_graph)
         # Close the table
         html += "</table>\n"
-        html += "</div>"
 
+        detected = firebase_helper.fetch_image(palm_oils_detected_graph)
+        harvested = firebase_helper.fetch_image(palm_oils_harvested_graph)
+        detected_harvested = firebase_helper.fetch_image(detected_harvested_graph)
+
+        detected_string =  f"<img src="f"{detected}"" >"
+        harvested_string = f"<img src="f"{harvested}"" >"
+        detected_harvested_string = f"<img src="f"{detected_harvested}"" >"
+
+        html += detected_harvested_string
+        html += detected_string
+        html += harvested_string
+        html += "</div>\n"
+    html += """
+
+    
+    < / body >
+    < / html >
+    """
     return html
 
 
