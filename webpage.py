@@ -26,6 +26,10 @@ def map_with_coordinates():
 
 @app.route('/detection_page')
 def detection_page():
+    coordinates = firebase_helper.fetch_data()
+    top_level_keys = list(coordinates.keys())
+    html_content = detection_page_content(top_level_keys, coordinates)
+    save_detection_page_html(html_content)
     return render_template('detection_page.html')
 
 @app.route('/harvesting_report')
@@ -42,6 +46,7 @@ def robot_location_page():
     image_dir = firebase_helper.list_jpg_files("robot_location")
     for img in image_dir: image_url = firebase_helper.fetch_image(img)
     return render_template('robot_location.html', data = data, image_url=image_url)
+
 
 @app.route('/next')
 def next():
@@ -129,6 +134,7 @@ def generate_2d_plot(x,y, filename, color='b', marker ='o', linestyle ='-', titl
     plt.close()  # Close the plot to free memory
 
 def dict_to_html_table():
+    coordinates = firebase_helper.fetch_data()
     html = """
     <!DOCTYPE html>
     <html lang="en">
@@ -136,27 +142,12 @@ def dict_to_html_table():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Harvesting Report</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
         <style>
             body {
                 font-family: Arial, sans-serif;
             }
-            .inline-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-                margin:20px
-            }
-            
-            .inline-items{
-                padding : 10px
-            }
-            
-            .inline-container img {
-            max-width: 100%; /* Ensure images don't exceed container width */
-            height: auto; /* Maintain aspect ratio */
-            margin: auto; /* Center align images horizontally */
-
-        }
             table {
                 border-collapse: collapse;
                 width: 100%;
@@ -178,17 +169,20 @@ def dict_to_html_table():
                 height: auto;
             }   
             h1 {text-align: center};
-        </style>>
+        </style>
         
     </head>
     <body>
-    <h1>Harvesting Report</h1>
+    <div class="header">
+          <h2>Harvesting Report</h2>
+    </div>
+
     """
 
     for key, value in coordinates.items():
         # Start building the HTML table
         date = key
-        html += "<div class=""inline-container"">\n"
+        html += "<div class=""inline-container-harvesting-report"">\n"
         key = key[:2] + "/" + key[2] + "/" + key[3:len(key)]
         html += f"<p> {key}</p>\n"
         html += "<table border='1'>\n"
@@ -286,11 +280,7 @@ if __name__ == '__main__':
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
     print("Welcome to HarvestMate")
     upload_data(coordinates)
-    coordinates = firebase_helper.fetch_data()
 
-    top_level_keys = list(coordinates.keys())
-    html_content = detection_page_content(top_level_keys, coordinates)
-    save_detection_page_html(html_content)
 
     # upload_images()
     upload_robot_images()

@@ -4,7 +4,7 @@ body {
     font-weight: 400; /* Regular */
     margin: 0;
     padding: 0;
-    background-color: #FE6F04;
+        background-color: #FFFFFF;
     background-repeat: no-repeat;
     overflow-x: hidden;
 }
@@ -24,14 +24,21 @@ h1 {
     font-size: 25px;
     font-weight: 600;
     text-align: center;
+    color: #000000;
+}
+
+h2 {
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
     color: #FFFFFF;
 }
 
 p {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 600;
     text-align: center;
-    color: #FFFFFF;
+    color: #000000;
 }
 /* this container is for dropdown page */
 .form-container {
@@ -41,9 +48,9 @@ p {
     justify-content: center;
     padding-top: 20px;
     padding-bottom: 30px;
-    background-color: #3d3d3d;
+    background-color: linear-gradient(45deg, #04edfe, #a1ffce);
     border-radius: 15px;
-    margin: 200px auto;
+    margin: 100px auto;
     max-width: 600px;
 }
 .form-group {
@@ -100,6 +107,22 @@ select:focus {
     object-fit: cover; /* Crop the image to cover the container */
 }
 
+.detected-image-container {
+    flex: 1;
+    max-width: 100px;
+    max-height: 100px; /* Set a max height */
+    overflow: hidden; /* Hide overflow */
+}
+
+.detected-image-container img {
+    width: 100%; /* Ensure the image fills the container horizontally */
+    height: 300px; /* Automatically adjust the height to maintain aspect ratio */
+    max-width: 100%; /* Ensure the image does not exceed the container's width */
+    max-height: 100%; /* Ensure the image does not exceed the container's height */
+    border-radius: 15px;
+    object-fit: cover; /* Crop the image to cover the container */
+}
+
 /* Logo Container Styles */
 .logo-container {
     display: flex;
@@ -134,13 +157,51 @@ select:focus {
     justify-content: center;
     margin-top: 60px; /* Adjust based on the header's height */
     padding: 20px;
-    background-color: #FE6F04; /* Background color for contrast */
+    background-color: #linear-gradient(45deg, #04edfe, #a1ffce); /* Background color for contrast */
+}
+
+.inline-container-detection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px; /* Adjust based on the header's height */
+    padding: 20px;
+    background-color: #linear-gradient(45deg, #04edfe, #a1ffce); /* Background color for contrast */
+}
+
+.inline-container-harvesting-report {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px; /* Adjust based on the header's height */
+    padding: 20px;
+    background-color: #linear-gradient(45deg, #04edfe, #a1ffce); /* Background color for contrast */
+}
+
+.item {
+    flex: 1; /* Allow items to grow and fill available space */
+    padding: 10px;
+    margin: 0 10px; /* Add some horizontal margin between items */
+    background-color: white; /* Background color for contrast */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding and border in the total width */
+    text-align: center; /* Center the text inside the items */
+}
+
+/* Ensure items do not get too large */
+.item:nth-child(1),
+.item:nth-child(2),
+.item:nth-child(3) {
+    flex-basis: 30%; /* Each item takes up 30% of the container's width */
 }
 
 .inline-container p {
     font-size: 20px;
     font-weight: 500; /* Regular */
-    color: #FFFFFF;
+    color: #0d0300;
     margin: 5px 0; /* Spacing between paragraphs */
 }
 
