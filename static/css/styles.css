@@ -1,0 +1,228 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400; /* Regular */
+    margin: 0;
+    padding: 0;
+    background-color: #FE6F04;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #3d3d3d;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+p {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    color: #FFFFFF;
+}
+/* this container is for dropdown page */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    background-color: #3d3d3d;
+    border-radius: 15px;
+    margin: 200px auto;
+    max-width: 600px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-bottom: 5px;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    border: 2px solid #3d3d3d;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+select:focus {
+    outline: none;
+    border-color: #FE6F04;
+    box-shadow: 0 0 5px rgba(254, 111, 4, 0.5);
+}
+
+.p-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.image-container {
+    flex: 1;
+    max-width: 200px;  
+    max-height: 300px; /* Set a max height */
+    overflow: hidden; /* Hide overflow */
+}
+
+.image-container img {
+    width: 100%; /* Ensure the image fills the container horizontally */
+    height: 300px; /* Automatically adjust the height to maintain aspect ratio */
+    max-width: 100%; /* Ensure the image does not exceed the container's width */
+    max-height: 100%; /* Ensure the image does not exceed the container's height */
+    border-radius: 15px;
+    object-fit: cover; /* Crop the image to cover the container */
+}
+
+/* Logo Container Styles */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 70px; /* Set a fixed height */
+}
+
+.logo-container img {
+    height: 100%;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Image Gallery Styles */
+.image-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin-top: 140px; /* Added margin to avoid overlap with the header */
+}
+
+/* Inline Container Styles */
+.inline-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px; /* Adjust based on the header's height */
+    padding: 20px;
+    background-color: #FE6F04; /* Background color for contrast */
+}
+
+.inline-container p {
+    font-size: 20px;
+    font-weight: 500; /* Regular */
+    color: #FFFFFF;
+    margin: 5px 0; /* Spacing between paragraphs */
+}
+
+.inline-container img {
+    width: auto; 
+    height: 350px; /* ADJUST THIS FOR OIL PALM IMAGEEEEE */
+    max-width: 80%; 
+    border-radius: 15px;
+    object-fit: cover; /* Crop the image to cover the container */
+    margin-top: 10px; /* Space between the image and the paragraphs */
+}
+
+/* Button Styles */
+.button-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    background-color: #3d3d3d;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; /* Semi-bold */
+    transition-duration: 0.5s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.btn-submit {
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; /* Semi-bold */
+    color: #fff;
+    background-color: #FE6F04;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .image-gallery .image-container {
+        flex: 1 1 45%;
+        max-width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-gallery .image-container {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-submit {
+        width: 100%;
+        margin-top: 10px;
+    }
+}

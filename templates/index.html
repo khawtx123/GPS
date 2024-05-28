@@ -1,89 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Webpage</title>
-    <style>
-    body {
-                font-family: Arial, sans-serif;
-            }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Harvestmate</title>
 
-         button{
-         font-family: Arial, sans-serif;
-         }
-        .flex-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px; /* Space between items */
-            border: 1px solid black;
-            padding: 20px;
-        }
-        .flex-item {
-            padding: 10px; /* Optional: padding inside each item */
-            border: 1px solid blue;
-        }
-        .image-container img {
-            width: 100px; /* Set the width to 100 pixels */
-            height: auto; /* Maintain aspect ratio */
-        }
-        th, td {
-                border: 1px solid #dddddd;
-                text-align: left;
-                padding: 8px;
-            }
-            th {
-                background-color: #f2f2f2;
-            }
-            p {
-                font-weight: bold;
-            }
-            img {
-                max-width: 70%;
-                height: auto;
-            }
-            h1 {text-align: center};
-
-    </style>
-
-    <link rel="stylesheet" href="css/styles.css">-->
-</head>
-<body>
-<div class="flex-container">
-        <div class="image-container">
-            <img src="{{harvestmate}}" alt="">
-        </div>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <!-- container for logo -->
+    <div class="header">
+      <div class="logo-container">
+        <img src="{{harvestmate}}" alt="Harvestmate Logo" />
+      </div>
     </div>
+
     <div class="image-gallery">
-        <div class="image-container">
-            <img src="{{img1}}" alt="Image 1">
-            <img src="{{img2}}" alt="Image 2">
-            <img src="{{img3}}" alt="Image 3">
-            <!-- Add more images as needed -->
-        </div>
-
-    </div>
-    <div class="flex-container">
-    <p>Choose one of the below</p>
-    </div>
-<div class="flex-container">
-    <button onclick="location.href='/map_with_coordinates'">Robot Location</button>
-    <button onclick="location.href='/harvesting_report'">Harvesting Report</button>
-    <button onclick="location.href='/detection_page'">Palm Oil Detection</button>
-    <button onclick="location.href='/robot_location'">Robot POV</button>
+      <div class="image-container">
+        <img src="{{img1}}" alt="Image 1" />
+      </div>
+      <div class="image-container">
+        <img src="{{img2}}" alt="Image 2" />
+      </div>
+      <div class="image-container">
+        <img src="{{img3}}" alt="Image 3" />
+      </div>
+      <!-- Add more images as needed -->
     </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const container = document.querySelector('.image-container');
-    const images = container.querySelectorAll('img');
+    <div class="p-container">
+      <p>Select one of the following choices</p>
+    </div>
 
-    // Clone the images to create a seamless scroll effect
-    images.forEach(image => {
-        const clone = image.cloneNode(true);
-        container.appendChild(clone);
-    });
-});
-</script>
-</body>
+    <div class="button-container">
+      <button onclick="location.href='/map_with_coordinates'">
+        Robot Location
+      </button>
+      <button onclick="location.href='/harvesting_report'">
+        Harvesting Report
+      </button>
+      <button onclick="location.href='/detection_page'">
+        Palm Oil Detection
+      </button>
+      <button onclick="location.href='/robot_location'">Robot POV</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.querySelector(".image-container");
+        const images = container.querySelectorAll("img");
+
+        // Clone img2 and img3 to create a seamless scroll effect
+        images.forEach((image, index) => {
+          if (index !== 0) {
+            // Exclude img1 (index 0)
+            const clone = image.cloneNode(true);
+            container.appendChild(clone);
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

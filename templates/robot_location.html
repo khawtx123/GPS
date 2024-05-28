@@ -3,30 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image from Firebase</title>
+    <title>Robot's Current Location</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<style>
-    h1 {text-align: center};
-    .inline-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-                margin:20px
-            }
 
-            .inline-items{
-                padding : 10px
-            }
-
-            .inline-container img {
-            max-width: 100%; /* Ensure images don't exceed container width */
-            height: auto; /* Maintain aspect ratio */
-            margin: auto; /* Center align images horizontally */
-
-        }
-</style>
 <body>
-    <h1>Robot Current Location</h1>
+    <div class="header">
+        <h1>Robot's Current Location</h1>
+    </div>
     <div class = "inline-container">
     {% for key, values in data.items() %}
             <p value="{{ key }} ">{{ key }} : {{ values }}
@@ -34,7 +20,8 @@
     {% endfor %}
         <img src="{{ image_url }}" alt="Image from Firebase">
     </div>
-
-    <button onclick="location.href='/'">Go Back to Home Page</button>
+    <div class=""button-container>
+        <button onclick="location.href='/'">Go Back to Home Page</button>
+    </div>
 </body>
 </html>
