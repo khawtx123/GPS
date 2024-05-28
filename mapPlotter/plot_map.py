@@ -44,6 +44,7 @@ class mapPlotter:
         self.m.zoom_control = False
 
         # Save the map to an HTML file
-        self.m.save(r"C:\Users\USER\source\repos\GPS\templates\map_with_coordinates.html")
+        self.m.save(r"C:\Users\USER\Documents\GPS\templates\map_with_coordinates.html")
+        # self.m.save(r"C:\Users\USER\source\repos\GPS\templates\map_with_coordinates.html")
         return self.coordinates
 

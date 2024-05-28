@@ -11,4 +11,5 @@ firebaseConfig = {
 }
 
 # Path to your service account key file
-service_account_path = r"C:\Users\USER\source\repos\GPS\firebase_mod\harvestmate-khawmebaby-firebase-adminsdk-ccudj-fab768094e.json"
+service_account_path = r"C:\Users\USER\Documents\GPS\firebase_mod\harvestmate-khawmebaby-firebase-adminsdk-ccudj-fab768094e.json"
+# service_account_path = r"C:\Users\USER\source\repos\GPS\firebase_mod\harvestmate-khawmebaby-firebase-adminsdk-ccudj-fab768094e.json"
