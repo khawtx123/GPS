@@ -25,7 +25,7 @@ class mapPlotter:
                     new_coordinates = {"date": date_time[0], "time": date_time[1], "name": new_location, "lat": float(row[1]), "lon": float(row[2]), "detected": int(row[3]), "harvested": int (row[4])}
                     self.coordinates.append(new_coordinates)
                     self.location_idx += 1
-
+        print(self.coordinates)
         # Add markers to the map
         for place in self.coordinates:
             folium.Marker(
@@ -46,4 +46,3 @@ class mapPlotter:
         # Save the map to an HTML file
         self.m.save(r"C:\Users\USER\source\repos\GPS\templates\map_with_coordinates.html")
         return self.coordinates
-

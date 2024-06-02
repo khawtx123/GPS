@@ -22,6 +22,8 @@ def home():
 
 @app.route('/map_with_coordinates')
 def map_with_coordinates():
+    location = mapPlotter("mapPlotter/coordinates.csv")
+    coordinates = location.read_csv()
     return render_template('map_with_coordinates.html')
 
 @app.route('/detection_page')
@@ -46,11 +48,6 @@ def robot_location_page():
     image_dir = firebase_helper.list_jpg_files("robot_location")
     for img in image_dir: image_url = firebase_helper.fetch_image(img)
     return render_template('robot_location.html', data = data, image_url=image_url)
-
-
-@app.route('/next')
-def next():
-    return render_template('next.html')
 
 
 def upload_data(coordinates):
@@ -275,11 +272,10 @@ def get_image_url():
     return jsonify({'error': 'Image path not provided'}), 400
 
 if __name__ == '__main__':
-    location = mapPlotter("mapPlotter/coordinates.csv")
-    coordinates = location.read_csv()
+
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
     print("Welcome to HarvestMate")
-    upload_data(coordinates)
+    # upload_data(coordinates)
 
 
     # upload_images()

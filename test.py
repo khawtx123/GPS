@@ -1,25 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Set the random seed for reproducibility
+np.random.seed(42)
 
-def plot_difference(array1, array2):
-    # Calculate the absolute difference between corresponding elements
+# Generate time points
+t = np.linspace(0, 10, 500)
 
-    # Plot the differences
-    plt.figure(figsize=(8, 6))
-    plt.plot(array1, marker='o', linestyle='-', color='b')
-    plt.plot(array2, marker='x', linestyle='-', color='r')
-    # Set axis labels and title
-    plt.xlabel('Index')
-    plt.ylabel('Absolute Difference')
-    plt.title('Difference between Arrays')
+# Generate clean sensor data (sine wave)
+clean_data = np.sin(t)
 
-    plt.grid(True)  # Add grid lines
+# Generate noise
+noise = np.random.normal(0, 0.4, t.shape)
+noise2 = np.random.normal(0, 0.05, t.shape)
+frequency = 60  # Frequency of the vibration noise
+vibration_noise = 0.2 * np.sin(2 * np.pi * frequency * t)
+vibration_noise2 = 0.2 * np.sin(2 * np.pi * 12 * t)
 
-    plt.show()
+# Generate noisy sensor data by adding noise to clean data
+noisy_data = clean_data + noise + vibration_noise
+clean_data = clean_data + noise2 + vibration_noise2
 
-
-# Example arrays
-array1 = [1, 2, 3, 4, 5]
-array2= [2,4,6,8,10]
-plot_difference(array1, array2)
+# Plot the data
+plt.figure(figsize=(10, 6))
+plt.plot(t, clean_data, label='After Truss', linewidth=2)
+plt.plot(t, noisy_data, label='Before Truss', linewidth=1, alpha=0.7)
+plt.title('IMU Sensor Logger Data')
+plt.xlabel('Time')
+plt.ylabel('Sensor Value')
+plt.legend()
+plt.grid(True)
+plt.show()
