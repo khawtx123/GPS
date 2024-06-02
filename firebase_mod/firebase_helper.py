@@ -87,4 +87,25 @@ class FirebaseHelper:
         print(location_data)
         return location_data
 
+
+    def get_coordinates(self):
+        coordinates = []
+        data = {'lat': 0, "lon": 0, "name":""}
+        root_ref = db.reference("/")
+        # Get the top-level keys
+        top_level_keys = root_ref.get().keys()
+        print(top_level_keys)
+        for key in top_level_keys:
+            if root_ref.child(key):
+                location_ref = root_ref.child(key)
+                location_keys = location_ref.get().keys()
+
+                for loc_key in location_keys:
+                    location_data = location_ref.child(loc_key).get()
+                    coordinates.append({'lat': location_data["latitude"], "lon": location_data["longitude"], "name":loc_key})
+                    
+        return coordinates
+
+
 firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
+firebase_helper.get_coordinates()
