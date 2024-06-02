@@ -103,7 +103,7 @@ class FirebaseHelper:
                 for loc_key in location_keys:
                     location_data = location_ref.child(loc_key).get()
                     coordinates.append({'lat': location_data["latitude"], "lon": location_data["longitude"], "name":loc_key})
-                    
+
         return coordinates
 
 
