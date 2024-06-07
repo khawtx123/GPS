@@ -46,12 +46,17 @@ def harvesting_report():
 @app.route('/robot_location')
 def robot_location_page():
     data = firebase_helper.get_last_entry()
+    return render_template('robot_location.html', data = data)
+
+
+@app.route('/latest_image')
+def latest_image():
     image_dir = firebase_helper.list_jpg_files("robot_location")
+    image_url = None
     for img in image_dir:
         image_url = firebase_helper.fetch_image(img)
         break
-    return render_template('robot_location.html', data = data, image_url=image_url)
-
+    return jsonify({'image_url': image_url})
 
 def upload_data(coordinates):
     for coordinate in coordinates:

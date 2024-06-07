@@ -4,24 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robot's Current Location</title>
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-
 <body>
     <div class="header">
         <h2>Robot's Current Location</h2>
     </div>
-    <div class = "inline-container">
-    {% for key, values in data.items() %}
-            <p value="{{ key }} ">{{ key }} : {{ values }}
-            </p>
-    {% endfor %}
-        <img src="{{ image_url }}" alt="Image from Firebase">
+
+    <div class="inline-container">
+        {% for key, values in data.items() %}
+            <p>{{ key }} : {{ values }}</p>
+        {% endfor %}
+        <img id="robot-image" src="{{ image_url }}" alt="Image from Firebase" style="display: none;">
+        <p id="no-image-message" style="display: none;">No image available.</p>
     </div>
-    <div class=""button-container>
+
+    <div class="button-container">
         <button onclick="location.href='/'">Go Back to Home Page</button>
     </div>
+
+    <script>
+        function fetchLatestImage() {
+            fetch('/latest_image')
+                .then(response => response.json())
+                .then(data => {
+                    const imageUrl = data.image_url;
+                    const imageElement = document.getElementById('robot-image');
+                    const noImageMessage = document.getElementById('no-image-message');
+
+                    if (imageUrl) {
+                        imageElement.src = imageUrl;
+                        imageElement.style.display = 'block';
+                        noImageMessage.style.display = 'none';
+                    } else {
+                        imageElement.style.display = 'none';
+                        noImageMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Error fetching latest image:', error));
+        }
+
+        // Fetch the latest image every 5 seconds (5000 milliseconds)
+        setInterval(fetchLatestImage, 5000);
+
+        // Fetch the latest image when the page loads
+        window.onload = fetchLatestImage;
+    </script>
 </body>
 </html>
