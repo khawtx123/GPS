@@ -85,6 +85,7 @@ class FirebaseHelper:
         location_keys = location_ref.get().keys()
         location_data = location_ref.child(list(location_keys)[-1]).get()
         print(location_data)
+        location_data['date'] = last_key
         return location_data
 
 

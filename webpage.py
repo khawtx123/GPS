@@ -47,7 +47,9 @@ def harvesting_report():
 def robot_location_page():
     data = firebase_helper.get_last_entry()
     image_dir = firebase_helper.list_jpg_files("robot_location")
-    for img in image_dir: image_url = firebase_helper.fetch_image(img)
+    for img in image_dir:
+        image_url = firebase_helper.fetch_image(img)
+        break
     return render_template('robot_location.html', data = data, image_url=image_url)
 
 
@@ -181,7 +183,9 @@ def dict_to_html_table():
         # Start building the HTML table
         date = key
         html += "<div class=""inline-container-harvesting-report"">\n"
-        key = key[:2] + "/" + key[2] + "/" + key[3:len(key)]
+
+        # key = key[:2] + "/" + key[2] + "/" + key[3:len(key)]
+        print(key)
         html += f"<p> {key}</p>\n"
         html += "<table border='1'>\n"
         keys = ["location", "latitude", "longitude", "palm oils detected", "palm oils harvested", "time"]
@@ -206,6 +210,14 @@ def dict_to_html_table():
             for detail, data in data.items():
                 html += f"<td>{data}</td>"
             html += "</tr>\n"
+
+        detected_harvested_dir = "graphs/" + date
+        palm_oils_detected_dir = "graphs/" + date
+        palm_oils_harvested_dir = "graphs/" + date
+
+        os.makedirs(detected_harvested_dir, mode=0o777, exist_ok=True)
+        os.makedirs(palm_oils_detected_dir, mode=0o777, exist_ok=True)
+        os.makedirs(palm_oils_harvested_dir, mode=0o777, exist_ok=True)
 
         detected_harvested_graph = "graphs/" + date + "/" + "detected_vs_harvested.jpg"
         palm_oils_detected_graph = "graphs/" + date + "/" + "palm oils detected.jpg"
@@ -235,9 +247,7 @@ def dict_to_html_table():
         html += "</div>\n"
     html += """
 
-    
-    < / body >
-    < / html >
+
     """
     return html
 
@@ -275,9 +285,4 @@ def get_image_url():
 if __name__ == '__main__':
     firebase_helper = FirebaseHelper(firebaseConfig, service_account_path)
     print("Welcome to HarvestMate")
-    # upload_data(coordinates)
-
-
-    # upload_images()
-    upload_robot_images()
-    app.run(debug=True)
+    app.run(host = '0.0.0.0', port = 5000, debug=True)
